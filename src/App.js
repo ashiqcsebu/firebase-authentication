@@ -1,5 +1,5 @@
 import './App.css';
-import { createUserWithEmailAndPassword, getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
+import { createUserWithEmailAndPassword, getAuth, GithubAuthProvider, GoogleAuthProvider, sendEmailVerification, signInWithPopup, signOut } from 'firebase/auth'
 import app from './firebase/firebase.init';
 import { useState } from 'react';
 
@@ -34,7 +34,7 @@ function App() {
       })
   }
 
-  const handleRegister = (event) => {
+  const handleEmailRegister = (event) => {
      event.preventDefault();
      setSuccess(false)
      const form = event.target;
@@ -45,12 +45,22 @@ function App() {
       const user = userCredential.user;
       setSuccess(true)
       form.reset();
+      verifyEmail()
       
     })
     .catch(error => {
       console.error('error: ', error)
     })
   }
+
+const verifyEmail =() =>{
+  sendEmailVerification(auth.currentUser)
+  .then(()=>{
+    alert('check ur email')
+  })
+}
+
+
 
   const handleSignOut = () => {
     signOut(auth)
@@ -72,7 +82,7 @@ function App() {
             <button onClick={() => handleGoogleSignIn()}>Google SignIn</button>
             <button onClick={() => handleGithubSignIn()}>Github SignIn</button> 
 
-            <form onSubmit={handleRegister}>
+            <form onSubmit={handleEmailRegister}>
               <input type="email" name="email" placeholder='Enter email ' />
               <br />
               <input type="password" name="password" placeholder='enter password' />
